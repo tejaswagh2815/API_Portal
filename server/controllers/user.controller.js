@@ -1,10 +1,13 @@
 const sequelize = require("../config/db.config");
 const UserModel = require("../models/User.model");
 const getResponse = require("../utils/respones");
+const bcrypt = require("bcrypt");
 
 async function register(data) {
   try {
     const resp = sequelize.transaction(async (t) => {
+      const hashedPassword = await bcrypt.hash(data.password, 10);
+
       const [userData, created] = await UserModel.findOrCreate({
         where: {
           user_email: data.email,
@@ -12,12 +15,14 @@ async function register(data) {
         defaults: {
           user_name: data.name,
           user_email: data.email,
-          password: data.password,
+          password: hashedPassword,
           user_roles: data.role,
           user_type: data.type,
         },
         transaction: t,
       });
+
+      userData.password = null;
 
       if (created) {
         return getResponse(201, true, "user created successfully", userData);
@@ -38,9 +43,11 @@ async function login(data) {
         user_email: data.email,
       },
     });
+
     if (userData) {
+      return getResponse(200, true, "user found", userData);
     } else {
-      getResponse(404, false, `${data.email}this email not registered`);
+      return getResponse(404, false, `${data.email} this email not registered`);
     }
   } catch (error) {
     console.error("user : login : Controller : ", error);
@@ -49,4 +56,5 @@ async function login(data) {
 
 module.exports = {
   register,
+  login,
 };
