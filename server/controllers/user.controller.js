@@ -45,6 +45,7 @@ async function login(data) {
     });
 
     if (userData) {
+      delete userData.dataValues.password;
       return getResponse(200, true, "user found", userData);
     } else {
       return getResponse(404, false, `${data.email} this email not registered`);
