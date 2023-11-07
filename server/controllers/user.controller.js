@@ -28,12 +28,12 @@ async function register(data) {
       if (created) {
         return getResponse(201, true, "user created successfully", userData);
       } else {
-        return getResponse(200, false, "user not created");
+        return getResponse(409, false, "email already exits");
       }
     });
     return resp;
   } catch (error) {
-    console.error("user : Register : Controller : ", error);
+    throw error;
   }
 }
 
@@ -72,7 +72,7 @@ async function login(data) {
       return getResponse(401, false, "email not exists");
     }
   } catch (error) {
-    console.error("user : login : Controller : ", error);
+    throw error;
   }
 }
 
@@ -90,10 +90,9 @@ async function getUserData(data) {
     if (userData) {
       return getResponse(200, true, "user data found", userData);
     } else {
-      return getResponse(400, false, "login fisrt and tray agin");
+      return getResponse(400, false, "login fisrt and try agin");
     }
   } catch (error) {
-    console.error("user : login : getUserData : ", error);
     throw error;
   }
 }
