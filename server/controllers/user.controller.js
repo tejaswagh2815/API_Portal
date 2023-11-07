@@ -76,7 +76,30 @@ async function login(data) {
   }
 }
 
+async function getUserData(data) {
+  try {
+    const userData = await UserModel.findOne({
+      where: {
+        user_id: data.id,
+      },
+      attributes: {
+        exclude: ["password"],
+      },
+    });
+
+    if (userData) {
+      return getResponse(200, true, "user data found", userData);
+    } else {
+      return getResponse(400, false, "login fisrt and tray agin");
+    }
+  } catch (error) {
+    console.error("user : login : getUserData : ", error);
+    throw error;
+  }
+}
+
 module.exports = {
   register,
   login,
+  getUserData,
 };
