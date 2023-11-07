@@ -2,6 +2,7 @@ const sequelize = require("../config/db.config");
 const UserModel = require("../models/User.model");
 const getResponse = require("../utils/respones");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 async function register(data) {
   try {
@@ -43,12 +44,32 @@ async function login(data) {
         user_email: data.email,
       },
     });
-
     if (userData) {
-      delete userData.dataValues.password;
-      return getResponse(200, true, "user found", userData);
+      const isPasswordMatch = await bcrypt.compare(
+        data.password,
+        userData.password
+      );
+
+      if (!isPasswordMatch) {
+        return getResponse(400, false, "password not match");
+      } else {
+        const { user_id, user_name, user_email, user_roles, user_type } =
+          userData;
+        const jwtsec = process.env.JWT_SECRET;
+        const token = jwt.sign({ user_id }, jwtsec, { expiresIn: "1d" });
+
+        const newData = {
+          user_id,
+          user_name,
+          user_email,
+          user_roles,
+          user_type,
+          token,
+        };
+        return getResponse(200, true, "login successfully", newData);
+      }
     } else {
-      return getResponse(404, false, `${data.email} this email not registered`);
+      return getResponse(401, false, "email not exists");
     }
   } catch (error) {
     console.error("user : login : Controller : ", error);

@@ -14,7 +14,16 @@ route.post("/register", (req, res) => {
 
 route.post("/login", (req, res) => {
   login(req.body)
-    .then((data) => res.status(data.status).json(data.data))
+    .then((data) => {
+      if (data.status === 200) {
+        res
+          .cookie("token", data.data.data.token)
+          .status(data.status)
+          .json(data.data);
+      } else {
+        res.status(data.status).json(data.data);
+      }
+    })
     .catch((err) => {
       console.error("auth : Login : ", err);
       res.status(400).json(err);
