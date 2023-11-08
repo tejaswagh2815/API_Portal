@@ -6,20 +6,27 @@ const ck = require("cookie-parser");
 
 const app = express();
 const authApi = require("./routes/user.route");
+const projectApi = require("./routes/project.route");
+const port = process.env.PORT;
 
 //middleware
 app.use(morgan("dev"));
+app.use(
+  cors({
+    origin: [process.env.FRONTEND_URL],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(ck());
-app.use(cors());
 
 app.use("/auth", authApi);
+app.use("/api", projectApi);
 
 app.get("/", (req, res) => {
   res.send("server is running");
 });
-
-const port = process.env.PORT;
 
 app.listen(port, () => {
   console.log(`server is runnig on http://localhost:${port}`);

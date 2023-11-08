@@ -26,7 +26,7 @@ async function init() {
 init();
 
 (async () => {
-  await sequelize.sync({ alter: true });
+  await sequelize.sync({ alter: false });
 })();
 
 module.exports = sequelize;

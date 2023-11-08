@@ -16,6 +16,7 @@ const UserModel = sequelize.define(
     },
     user_email: {
       type: DataTypes.STRING(100),
+      unique: true,
       allowNull: false,
     },
     password: {
@@ -28,6 +29,10 @@ const UserModel = sequelize.define(
       allowNull: false,
     },
     user_type: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+    },
+    createby: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
