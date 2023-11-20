@@ -1,10 +1,8 @@
 const sequelize = require("../config/db.config");
 const ProjectModel = require("../models/Project.model");
-const UserModel = require("../models/User.model");
-const { all } = require("../routes/project.route");
 const getResponse = require("../utils/respones");
 
-async function create(data) {
+async function createProject(data) {
   try {
     const respones = await sequelize.transaction(async (t) => {
       const crtProj = await ProjectModel.create(
@@ -33,7 +31,7 @@ async function getAll() {
   try {
     const allProject = await ProjectModel.findAll();
 
-    if (allProject) {
+    if (allProject.length > 0) {
       return getResponse(200, true, "all project", allProject);
     } else {
       return getResponse(404, false, "no project found");
@@ -43,4 +41,4 @@ async function getAll() {
   }
 }
 
-module.exports = { create, getAll };
+module.exports = { createProject, getAll };

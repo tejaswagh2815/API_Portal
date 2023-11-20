@@ -1,13 +1,12 @@
 const express = require("express");
 const verifyUser = require("../middleware/auth");
-const { create, getAll } = require("../controllers/project.controller");
+const { createProject, getAll } = require("../controllers/project.controller");
 
 const route = express.Router();
 
-route.post("/addporj", verifyUser, (req, res) => {
-  create(req.body)
+route.post("/createProject", verifyUser, (req, res) => {
+  createProject(req.body)
     .then((data) => {
-      console.log(data);
       res.status(data.status).json(data.data);
     })
     .catch((err) => {
@@ -16,12 +15,12 @@ route.post("/addporj", verifyUser, (req, res) => {
     });
 });
 
-route.get("/allproj", verifyUser, (req, res) => {
+route.get("/allProject", verifyUser, (req, res) => {
   getAll()
     .then((data) => {
       res.status(data.status).json(data.data);
     })
-    .catch((err) => res.status(404).json(err));
+    .catch((err) => res.status(404).json(err.errors));
 });
 
 module.exports = route;

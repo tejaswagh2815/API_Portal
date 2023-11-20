@@ -93,7 +93,7 @@ async function getUserData(data) {
       return getResponse(400, false, "login fisrt and try agin");
     }
   } catch (error) {
-    throw error;
+    throw new Error(error);
   }
 }
 

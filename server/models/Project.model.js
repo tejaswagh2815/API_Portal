@@ -11,7 +11,7 @@ const ProjectModel = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    pro_name: { type: DataTypes.STRING(50), allowNull: false },
+    pro_name: { type: DataTypes.STRING(50), unique: true, allowNull: false },
     base_url: { type: DataTypes.STRING(50), allowNull: true },
     user_id: {
       type: DataTypes.INTEGER,

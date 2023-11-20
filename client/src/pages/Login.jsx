@@ -25,7 +25,7 @@ function Login() {
   };
 
   return (
-    <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
+    <div className="relative flex flex-col justify-center min-h-screen overflow-hidden bg-slate-500">
       <div className="w-full p-6 m-auto bg-white rounded-md shadow-md lg:max-w-xl md:max-w-md sm:max-w-sm">
         <h1 className="text-3xl font-bold text-center text-blue-700 ">LOGIN</h1>
         <form onSubmit={handleSubmit} className="mt-6">
