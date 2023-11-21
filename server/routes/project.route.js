@@ -1,6 +1,11 @@
 const express = require("express");
 const verifyUser = require("../middleware/auth");
-const { createProject, getAll } = require("../controllers/project.controller");
+const {
+  createProject,
+  getAll,
+  getProjecById,
+  deleteById,
+} = require("../controllers/project.controller");
 
 const route = express.Router();
 
@@ -17,6 +22,22 @@ route.post("/createProject", verifyUser, (req, res) => {
 
 route.get("/allProject", verifyUser, (req, res) => {
   getAll()
+    .then((data) => {
+      res.status(data.status).json(data.data);
+    })
+    .catch((err) => res.status(404).json(err.errors));
+});
+
+route.get("/project/:id", verifyUser, (req, res) => {
+  getProjecById(req.params)
+    .then((data) => {
+      res.status(data.status).json(data.data);
+    })
+    .catch((err) => res.status(404).json(err.errors));
+});
+
+route.delete("/project/:id", verifyUser, (req, res) => {
+  deleteById(req.params)
     .then((data) => {
       res.status(data.status).json(data.data);
     })

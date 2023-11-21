@@ -41,4 +41,37 @@ async function getAll() {
   }
 }
 
-module.exports = { createProject, getAll };
+async function getProjecById(data) {
+  try {
+    let { id } = data;
+    const record = await ProjectModel.findByPk(id);
+    if (record) {
+      return getResponse(200, true, "Project find", record);
+    } else {
+      return getResponse(400, false, "no project");
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function deleteById(data) {
+  try {
+    let { id } = data;
+    let record = await ProjectModel.destroy({
+      where: {
+        pro_id: id,
+      },
+    });
+
+    if (record) {
+      return getResponse(200, true, "Project was deleted");
+    } else {
+      return getResponse(404, false, " project not found");
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { createProject, getAll, getProjecById, deleteById };
