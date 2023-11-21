@@ -3,6 +3,7 @@ const {
   register,
   login,
   getUserData,
+  deleteUser,
 } = require("../controllers/user.controller");
 const verifyUser = require("../middleware/auth");
 
@@ -44,9 +45,17 @@ route.get("/verifyuser", verifyUser, (req, res) => {
     });
 });
 
-route.get("/logout", (req, res) => {
+route.get("/logout", verifyUser, (req, res) => {
   res.clearCookie("token");
   return res.status(200).json({ result: true });
+});
+
+route.delete("/user/:id", verifyUser, (req, res) => {
+  deleteUser(req.params)
+    .then((data) => {
+      res.status(data.status).json(data.data);
+    })
+    .catch((err) => res.status(404).json(err.errors));
 });
 
 module.exports = route;

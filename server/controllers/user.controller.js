@@ -97,8 +97,29 @@ async function getUserData(data) {
   }
 }
 
+async function deleteUser(data) {
+  try {
+    let { id } = data;
+
+    let record = await UserModel.destroy({
+      where: {
+        user_id: id,
+      },
+    });
+
+    if (record) {
+      return getResponse(200, true, "User reomved");
+    } else {
+      return getResponse(404, false, "no data found");
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   register,
   login,
   getUserData,
+  deleteUser,
 };

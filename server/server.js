@@ -7,6 +7,7 @@ const ck = require("cookie-parser");
 const app = express();
 const authApi = require("./routes/user.route");
 const projectApi = require("./routes/project.route");
+const teamApi = require("./routes/team.route");
 const port = process.env.PORT;
 
 //middleware
@@ -23,6 +24,7 @@ app.use(ck());
 
 app.use("/auth", authApi);
 app.use("/api", projectApi);
+app.use("/api", teamApi);
 
 app.get("/", (req, res) => {
   res.send("server is running");

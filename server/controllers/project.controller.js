@@ -1,5 +1,6 @@
 const sequelize = require("../config/db.config");
 const ProjectModel = require("../models/Project.model");
+const TeamModel = require("../models/Team.model");
 const getResponse = require("../utils/respones");
 
 async function createProject(data) {
@@ -44,7 +45,16 @@ async function getAll() {
 async function getProjecById(data) {
   try {
     let { id } = data;
-    const record = await ProjectModel.findByPk(id);
+    const record = await ProjectModel.findOne({
+      where: {
+        pro_id: id,
+      },
+      include: [
+        {
+          model: TeamModel,
+        },
+      ],
+    });
     if (record) {
       return getResponse(200, true, "Project find", record);
     } else {
