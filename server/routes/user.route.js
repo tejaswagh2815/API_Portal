@@ -50,12 +50,12 @@ route.get("/logout", verifyUser, (req, res) => {
   return res.status(200).json({ result: true });
 });
 
-route.delete("/user/:id", verifyUser, (req, res) => {
-  deleteUser(req.params)
-    .then((data) => {
-      res.status(data.status).json(data.data);
-    })
-    .catch((err) => res.status(404).json(err.errors));
-});
+// route.delete("/user/:id", verifyUser, (req, res) => {
+//   deleteUser(req.params)
+//     .then((data) => {
+//       res.status(data.status).json(data.data);
+//     })
+//     .catch((err) => res.status(404).json(err.errors));
+// });
 
 module.exports = route;
