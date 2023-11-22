@@ -2,7 +2,6 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db.config");
 const ProjectModel = require("./Project.model");
 const UserModel = require("./User.model");
-const ApiParamModel = require("./ApiParm.model");
 
 const ApiModel = sequelize.define(
   "apitable",
@@ -14,7 +13,7 @@ const ApiModel = sequelize.define(
       autoIncrement: true,
     },
     pro_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: false,
     },
     endpoint: {
@@ -27,7 +26,7 @@ const ApiModel = sequelize.define(
     },
     description: { type: DataTypes.STRING(50), allowNull: true },
     reqtype: { type: DataTypes.INTEGER, allowNull: false },
-    createBy: { type: DataTypes.INTEGER, allowNull: false },
+    createBy: { type: DataTypes.BIGINT, allowNull: false },
   },
   {
     tableName: "apitable",

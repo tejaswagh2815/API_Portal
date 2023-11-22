@@ -14,7 +14,7 @@ const ProjectModel = sequelize.define(
     pro_name: { type: DataTypes.STRING(50), unique: true, allowNull: false },
     base_url: { type: DataTypes.STRING(50), allowNull: true },
     user_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: true,
     },
   },

@@ -8,6 +8,8 @@ const app = express();
 const authApi = require("./routes/user.route");
 const projectApi = require("./routes/project.route");
 const teamApi = require("./routes/team.route");
+const Api = require("./routes/api.route");
+const bodyParser = require("body-parser");
 const port = process.env.PORT;
 
 //middleware
@@ -20,11 +22,13 @@ app.use(
   })
 );
 app.use(express.json());
+// app.use(bodyParser);
 app.use(ck());
 
 app.use("/auth", authApi);
 app.use("/api", projectApi);
 app.use("/api", teamApi);
+app.use("/api", Api);
 
 app.get("/", (req, res) => {
   res.send("server is running");

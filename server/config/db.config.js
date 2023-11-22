@@ -10,7 +10,7 @@ const sequelize = new Sequelize(
     dialect: "mysql", // The dialect for MySQL is 'mysql'
     logging: false, // Set to 'true' to see SQL logs
     define: {
-      paranoid: true,
+      paranoid: false,
     },
   }
 );
