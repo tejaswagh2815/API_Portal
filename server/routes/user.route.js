@@ -47,7 +47,7 @@ route.get("/verifyuser", verifyUser, (req, res) => {
 
 route.get("/logout", verifyUser, (req, res) => {
   res.clearCookie("token");
-  return res.status(200).json({ result: true });
+  return res.status(200).json({ result: true, reason: "Logout sccussefully" });
 });
 
 // route.delete("/user/:id", verifyUser, (req, res) => {
