@@ -1,5 +1,6 @@
 import Login from "./Login";
 import Register from "./Register";
-import Home from "./Home";
+import AllProject from "./AllProject";
+import AddProject from "./AddProject";
 
-export { Login, Register, Home };
+export { Login, Register, AllProject, AddProject };

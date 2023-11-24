@@ -5,6 +5,9 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { errorcss } from "../helper/helpler";
 import { toast } from "react-toastify";
+import { useCookies } from "react-cookie";
+import { useDispatch } from "react-redux";
+import { verifyUser } from "../contexts/authSlice";
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -17,10 +20,30 @@ const schema = Yup.object().shape({
 
 function Login() {
   const navigate = useNavigate();
-
-  useEffect(() => {}, []);
-
+  const dispatch = useDispatch();
   axios.defaults.withCredentials = true;
+
+  const [cookies, setCookie] = useCookies(["token"]);
+  const [loader, setLoader] = useState(false);
+
+  useEffect(() => {
+    setLoader(true);
+    if (cookies) {
+      axios
+        .get("http://localhost:3000/auth/verifyuser")
+        .then((res) => {
+          if (res.data.result) {
+            dispatch(verifyUser(res.data.data));
+            setLoader(false);
+            navigate("/allproject");
+          } else {
+            setLoader(false);
+          }
+        })
+        .catch((err) => console.log(err));
+      setLoader(false);
+    }
+  }, []);
 
   return (
     <>
@@ -36,7 +59,8 @@ function Login() {
                 toast.success(res.data.reason, {
                   position: toast.POSITION.TOP_RIGHT,
                 });
-                navigate("/home");
+                dispatch(verifyUser(res.data.data));
+                navigate("/allproject");
               }
             })
             .catch((err) =>
@@ -55,7 +79,7 @@ function Login() {
           handleSubmit,
         }) => (
           <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
-            <div className="w-full p-6 m-auto bg-white rounded-md shadow-md lg:max-w-xl md:max-w-md sm:max-w-sm">
+            <div className="w-full p-6 m-auto rounded-md shadow-md lg:max-w-xl md:max-w-md sm:max-w-sm">
               <h1 className="text-4xl  text-center ">LOGIN</h1>
               <form noValidate onSubmit={handleSubmit} className="mt-6">
                 <div className="form-control w-full max-w-xl">
