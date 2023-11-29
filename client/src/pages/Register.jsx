@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Field, Formik } from "formik";
 import * as Yup from "yup";
-import { errorcss } from "../helper/helpler";
-import { toast } from "react-toastify";
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -23,30 +21,27 @@ function Register() {
 
   useEffect(() => {}, []);
 
-  axios.defaults.withCredentials = true;
-
   return (
     <>
       <Formik
         validationSchema={schema}
-        initialValues={{ name: "", email: "", password: "", role: 1, type: 0 }}
+        initialValues={{
+          name: "",
+          email: "",
+          password: "",
+          role: 1,
+          type: null,
+        }}
         onSubmit={(values) => {
           // Alert the input values of the form that we filled
           axios
             .post("http://localhost:3000/auth/register", values)
             .then((res) => {
               if (res.data.result) {
-                toast.success(res.data.reason, {
-                  position: toast.POSITION.TOP_RIGHT,
-                });
                 navigate("/allproject");
               }
             })
-            .catch((err) =>
-              toast.error(err, {
-                position: toast.POSITION.TOP_RIGHT,
-              })
-            );
+            .catch((err) => console.log(err));
         }}
       >
         {({
@@ -74,7 +69,7 @@ function Register() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  <p className={errorcss}>
+                  <p className="text-red-500 text-sm">
                     {errors.name && touched.name && errors.name}
                   </p>
                 </div>
@@ -91,7 +86,7 @@ function Register() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  <p className={errorcss}>
+                  <p className="text-red-500 text-sm">
                     {errors.email && touched.email && errors.email}
                   </p>
                 </div>
@@ -108,7 +103,7 @@ function Register() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  <p className={errorcss}>
+                  <p className="text-red-500 text-sm">
                     {errors.password && touched.password && errors.password}
                   </p>
                 </div>
@@ -128,7 +123,7 @@ function Register() {
                     <option value={2}>frontend</option>
                     <option value={3}>fullstack</option>
                   </Field>
-                  <p className={errorcss}>
+                  <p className="text-red-500 text-sm">
                     {errors.selected && touched.selected && errors.selected}
                   </p>
                 </div>

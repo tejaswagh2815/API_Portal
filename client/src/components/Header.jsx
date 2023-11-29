@@ -1,17 +1,14 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { FaPowerOff } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { FaPowerOff } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, verifyUser } from "../contexts/authSlice";
-import { VerifyUser } from "../services/services";
+import { HandleLogout, VerifyUser } from "../services/services";
+import { logout, verifyUser } from "../redux/authSlice";
 
-function Navibar() {
+function Header() {
+  const { user_type } = useSelector((state) => state.userData);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user_type, user_role } = useSelector((state) => state.userData);
-  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     VerifyUser()
@@ -27,30 +24,21 @@ function Navibar() {
   }, []);
 
   const hadleLogout = () => {
-    axios
-      .get("http://localhost:3000/auth/logout", {
-        withCredentials: true,
-      })
+    HandleLogout()
       .then((res) => {
-        if (res.data.result) {
-          toast.success(res.data.reason, {
-            position: toast.POSITION.TOP_RIGHT,
-          });
+        if (res.result) {
           dispatch(logout());
+          navigate("/login");
+        } else {
           navigate("/login");
         }
       })
-      .catch((err) => {
-        toast.error(err.message, {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-      });
+      .catch((err) => console.log(err));
   };
-
   return (
     <>
       {user_type === 0 ? (
-        <div className="navbar bg-primary text-secondary-content  max-w-[100rem] mx-auto sm:btm-nav-sm md:btm-nav-md">
+        <div className="navbar bg-primary text-secondary-content  mx-auto sm:btm-nav-sm md:btm-nav-md">
           <div className="flex-1">
             <Link to="/allproject" className="btn btn-ghost text-xl">
               Project List
@@ -64,18 +52,18 @@ function Navibar() {
           </div>
           <div className="flex-none">
             <button onClick={hadleLogout} className="btn btn-ghost btn-circle">
-              <FaPowerOff />
+              <FaPowerOff style={{ fontSize: 22 }} />
             </button>
           </div>
         </div>
       ) : (
-        <div className="navbar bg-primary text-secondary-content max-w-[100rem] mx-auto sm:btm-nav-sm md:btm-nav-md">
+        <div className="navbar bg-primary text-secondary-content mx-auto sm:btm-nav-sm md:btm-nav-md">
           <div className="flex-1">
             <a className="btn btn-ghost text-xl">user</a>
           </div>
           <div className="flex-none">
             <button onClick={hadleLogout} className="btn btn-ghost btn-circle">
-              <FaPowerOff />
+              <FaPowerOff style={{ fontSize: 22 }} />
             </button>
           </div>
         </div>
@@ -84,4 +72,4 @@ function Navibar() {
   );
 }
 
-export default Navibar;
+export default Header;

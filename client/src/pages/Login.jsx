@@ -1,13 +1,10 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { errorcss } from "../helper/helpler";
-import { toast } from "react-toastify";
-import { useCookies } from "react-cookie";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { verifyUser } from "../contexts/authSlice";
+import { verifyUser } from "../redux/authSlice";
+import { UserLogin } from "../services/services";
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -21,53 +18,21 @@ const schema = Yup.object().shape({
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  axios.defaults.withCredentials = true;
-
-  const [cookies, setCookie] = useCookies(["token"]);
-  const [loader, setLoader] = useState(false);
-
-  useEffect(() => {
-    setLoader(true);
-    if (cookies) {
-      axios
-        .get("http://localhost:3000/auth/verifyuser")
-        .then((res) => {
-          if (res.data.result) {
-            dispatch(verifyUser(res.data.data));
-            setLoader(false);
-            navigate("/allproject");
-          } else {
-            setLoader(false);
-          }
-        })
-        .catch((err) => console.log(err));
-      setLoader(false);
-    }
-  }, []);
-
   return (
     <>
       <Formik
         validationSchema={schema}
         initialValues={{ email: "", password: "" }}
         onSubmit={(values) => {
-          // Alert the input values of the form that we filled
-          axios
-            .post("http://localhost:3000/auth/login", values)
+          UserLogin(values)
             .then((res) => {
-              if (res.data.result) {
-                toast.success(res.data.reason, {
-                  position: toast.POSITION.TOP_RIGHT,
-                });
-                dispatch(verifyUser(res.data.data));
-                navigate("/allproject");
+              if (res.result) {
+                dispatch(verifyUser(res.data));
+                navigate("/");
+              } else {
               }
             })
-            .catch((err) =>
-              toast.error(err, {
-                position: toast.POSITION.TOP_RIGHT,
-              })
-            );
+            .catch((err) => console.log(err));
         }}
       >
         {({
@@ -95,7 +60,7 @@ function Login() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  <p className={errorcss}>
+                  <p className="text-red-500 text-sm">
                     {errors.email && touched.email && errors.email}
                   </p>
                 </div>
@@ -112,14 +77,14 @@ function Login() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  <p className={errorcss}>
+                  <p className="text-red-500 text-sm">
                     {errors.password && touched.password && errors.password}
                   </p>
                 </div>
 
                 {/* <a href="#" className="text-xs text-blue-600 hover:underline">
-            Forget Password?
-          </a> */}
+        Forget Password?
+      </a> */}
                 <div className="form-control mt-6 flex justify-center">
                   <button
                     type="submit"
@@ -129,12 +94,6 @@ function Login() {
                   </button>
                 </div>
               </form>
-
-              {/* <p className="mt-8 text-xs font-light text-center text-gray-700">
-          {" "}
-          Don't have an account?{" "}
-          <a href="#" className="font-medium text-blue-600 hover:underline"></a>
-        </p> */}
             </div>
           </div>
         )}

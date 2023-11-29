@@ -1,20 +1,32 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
 import "./index.css";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { CookiesProvider } from "react-cookie";
+import {
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from "react-router-dom";
+import Layout from "./Layout.jsx";
+import { AllProject, Home, Login, Register } from "./pages";
 import { Provider } from "react-redux";
-import { store } from "./contexts/store.js";
+import store from "./redux/store";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<Layout />}>
+      <Route path="" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/allproject" element={<AllProject />} />
+    </Route>
+  )
+);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <CookiesProvider defaultSetOptions={{ path: "/" }}>
-      <Provider store={store}>
-        <ToastContainer />
-        <App />
-      </Provider>
-    </CookiesProvider>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
