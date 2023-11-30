@@ -8,13 +8,13 @@ async function createProject(data) {
     const respones = await sequelize.transaction(async (t) => {
       const crtProj = await ProjectModel.create(
         {
-          pro_name: data.name,
-          base_url: data.url,
+          pro_name: data.pro_name,
+          dev_url: data.dev_url,
+          prod_url: data.prod_url,
           user_id: data.id,
         },
         { transaction: t }
       );
-
       if (crtProj) {
         return getResponse(201, true, "Project created", crtProj);
       } else {
@@ -30,7 +30,13 @@ async function createProject(data) {
 
 async function getAll() {
   try {
-    const allProject = await ProjectModel.findAll();
+    const allProject = await ProjectModel.findAll({
+      include: [
+        {
+          model: TeamModel,
+        },
+      ],
+    });
 
     if (allProject.length > 0) {
       return getResponse(200, true, "all project", allProject);
@@ -84,4 +90,33 @@ async function deleteById(data) {
   }
 }
 
-module.exports = { createProject, getAll, getProjecById, deleteById };
+async function editProject(data) {
+  try {
+    let { pro_id, pro_name, dev_url, prod_url } = data;
+    console.log(data);
+    let record = await ProjectModel.update(
+      { pro_name, dev_url, prod_url },
+      {
+        where: {
+          pro_id,
+        },
+      }
+    );
+
+    if (record) {
+      return getResponse(200, true, "Project is updated");
+    } else {
+      return getResponse(404, false, " project not found");
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = {
+  createProject,
+  getAll,
+  getProjecById,
+  deleteById,
+  editProject,
+};

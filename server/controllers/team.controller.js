@@ -2,11 +2,6 @@ const sequelize = require("../config/db.config");
 const TeamModel = require("../models/Team.model");
 const getResponse = require("../utils/respones");
 
-exports.addNew = async (data) => {
-  try {
-  } catch (error) {}
-};
-
 async function addNew(data) {
   try {
     const resp = sequelize.transaction(async (t) => {

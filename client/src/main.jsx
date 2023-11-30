@@ -8,7 +8,7 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import Layout from "./Layout.jsx";
-import { AllProject, Home, Login, Register } from "./pages";
+import { AddProject, AllProject, Home, Login, Register } from "./pages";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 
@@ -19,6 +19,7 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/allproject" element={<AllProject />} />
+      <Route path="/addproject/:pro_id" element={<AddProject />} />
     </Route>
   )
 );

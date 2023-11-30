@@ -1,7 +1,12 @@
 import React from "react";
+import { AddEditPro } from "../components";
 
 function AddProject() {
-  return <div>AddProject</div>;
+  return (
+    <>
+      <AddEditPro />
+    </>
+  );
 }
 
 export default AddProject;

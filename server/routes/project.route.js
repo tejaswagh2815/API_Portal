@@ -5,6 +5,7 @@ const {
   getAll,
   getProjecById,
   deleteById,
+  editProject,
 } = require("../controllers/project.controller");
 
 const route = express.Router();
@@ -38,6 +39,14 @@ route.get("/project/:id", verifyUser, (req, res) => {
 
 route.delete("/project/:id", verifyUser, (req, res) => {
   deleteById(req.params)
+    .then((data) => {
+      res.status(data.status).json(data.data);
+    })
+    .catch((err) => res.status(404).json(err.errors));
+});
+
+route.put("/editproject", verifyUser, (req, res) => {
+  editProject(req.body)
     .then((data) => {
       res.status(data.status).json(data.data);
     })

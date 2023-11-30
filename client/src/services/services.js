@@ -54,11 +54,39 @@ export const GetAllProject = async () => {
   }
 };
 
-export const GetProjectById = async (data) => {
+export const GetProjectById = async (id) => {
   try {
     const result = await axios({
       method: "GET",
-      url: `${baseUrl}/api/project/${data}`,
+      url: `${baseUrl}/api/project/${id}`,
+      withCredentials: true,
+    });
+    return result.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const CreateProject = async (values) => {
+  try {
+    const result = await axios({
+      method: "POST",
+      url: `${baseUrl}/api/createProject`,
+      data: values,
+      withCredentials: true,
+    });
+    return result.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const EditProject = async (values) => {
+  try {
+    const result = await axios({
+      method: "PUT",
+      url: `${baseUrl}/api/editproject`,
+      data: values,
       withCredentials: true,
     });
     return result.data;

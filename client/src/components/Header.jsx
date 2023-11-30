@@ -38,12 +38,12 @@ function Header() {
   return (
     <>
       {user_type === 0 ? (
-        <div className="navbar bg-primary text-secondary-content  mx-auto sm:btm-nav-sm md:btm-nav-md">
+        <div className="navbar bg-[#08509D] text-secondary-content  mx-auto sm:btm-nav-sm md:btm-nav-md">
           <div className="flex-1">
             <Link to="/allproject" className="btn btn-ghost text-xl">
               Project List
             </Link>
-            <Link to="/addproject" className="btn btn-ghost text-xl">
+            <Link to="/addproject/0" className="btn btn-ghost text-xl">
               Add Project
             </Link>
             <Link to="/register" className="btn btn-ghost text-xl">

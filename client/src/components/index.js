@@ -1,4 +1,5 @@
 import Header from "./Header";
 import Footer from "./Footer";
+import AddEditPro from "./AddEditPro";
 
-export { Header, Footer };
+export { Header, Footer, AddEditPro };

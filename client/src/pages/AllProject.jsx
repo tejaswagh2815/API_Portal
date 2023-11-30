@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Form, json, useNavigate } from "react-router-dom";
-import { GetAllProject, GetProjectById } from "../services/services";
-import { FaRegEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { GetAllProject } from "../services/services";
+import { FaRegEdit, FaUserEdit } from "react-icons/fa";
 
 function AllProject() {
   const [list, setList] = useState([]);
@@ -9,39 +9,42 @@ function AllProject() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setList([]);
     GetAllProject()
       .then((res) => {
         if (res.result) {
+          console.log("console:", res.data);
           setList(res.data);
         }
       })
       .catch((err) => console.log(err));
-  }, [navigate]);
-
-  useEffect(() => {
-    GetProjectById(data)
-      .then((res) => {
-        if (res.result) {
-          setData(res.data);
-        }
-      })
-      .catch((err) => console.log(err));
-  }, [data]);
+  }, []);
 
   return (
     <>
       {list.length > 0 ? (
         <>
-          <h1 className="font-bold px-9 my-10">AllProject</h1>
-          <div className="overflow-x-auto">
+          <div className="flex justify-between items-center mx-14">
+            <h1 className="font-bold text-3xl px-9 my-10"> All Project </h1>
+            <button
+              onClick={() => navigate("/addproject/0")}
+              className="btn btn-outline btn-accent text-white"
+            >
+              add project
+            </button>
+          </div>
+          <div className="overflow-x-auto mx-10">
             <table className="table">
               {/* head */}
               <thead>
-                <tr>
+                <tr className="bg-blue-100">
                   <th>Sr</th>
                   <th>Name</th>
-                  <th>BaseUrl</th>
-                  <th>Edit</th>
+                  <th>Devlopment Url</th>
+                  <th>Production Url</th>
+                  <th className="text-center">Team Members</th>
+                  <th className="text-center">Edit</th>
+                  <th className="text-center">Add Team</th>
                 </tr>
               </thead>
               <tbody>
@@ -49,16 +52,27 @@ function AllProject() {
                   <tr key={data.pro_id}>
                     <th>{index + 1}</th>
                     <td>{data.pro_name}</td>
-                    <td>{data.base_url}</td>
-                    <td>
+                    <td>{data.dev_url}</td>
+                    <td>{data.prod_url}</td>
+                    <td className="text-center">{data.teams.length}</td>
+                    <td className="text-center">
                       <button
                         onClick={() => {
-                          setData(data.pro_id);
-                          document.getElementById("my_modal_1").showModal();
+                          navigate(`/addProject/${data.pro_id}`);
                         }}
                         className="btn btn-ghost"
                       >
                         <FaRegEdit style={{ fontSize: 24 }} />
+                      </button>
+                    </td>
+                    <td className="text-center">
+                      <button
+                        onClick={() => {
+                          setData(data);
+                        }}
+                        className="btn btn-ghost"
+                      >
+                        <FaUserEdit style={{ fontSize: 24 }} />
                       </button>
                     </td>
                   </tr>
@@ -66,31 +80,6 @@ function AllProject() {
               </tbody>
             </table>
           </div>
-          {/* Open the modal using document.getElementById('ID').showModal() method */}
-          <dialog id="my_modal_1" className="modal">
-            <div className="modal-box">
-              <h3 className="font-bold text-lg text-center">{data.pro_name}</h3>
-              <label className="form-control w-full max-w-xs">
-                <div className="label">
-                  <span className="label-text">baseUrl</span>
-                </div>
-                <input
-                  type="text"
-                  placeholder="Type here"
-                  className="input input-bordered input-xs sm:input-sm  md:input-md lg:input-xl"
-                  value={data.base_url}
-                  onChange={(e) => setData.base_url(e.target.value)}
-                />
-              </label>
-              <label>{JSON.stringify(data.team)}</label>
-              <div className="modal-action">
-                <form method="dialog">
-                  {/* if there is a button in form, it will close the modal */}
-                  <button className="btn">Close</button>
-                </form>
-              </div>
-            </div>
-          </dialog>
         </>
       ) : (
         <>
