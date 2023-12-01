@@ -19,6 +19,7 @@ async function register(data) {
           password: hashedPassword,
           user_roles: data.role,
           user_type: data.type,
+          createby: data.id,
         },
         transaction: t,
       });
@@ -28,7 +29,7 @@ async function register(data) {
       if (created) {
         return getResponse(201, true, "user created successfully", userData);
       } else {
-        return getResponse(409, false, "email already exits");
+        return getResponse(200, false, "email already exits");
       }
     });
     return resp;

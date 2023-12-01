@@ -2,26 +2,30 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GetAllProject } from "../services/services";
 import { FaRegEdit, FaUserEdit } from "react-icons/fa";
+import Loader from "../components/Loader";
 
 function AllProject() {
   const [list, setList] = useState([]);
   const [data, setData] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    setIsLoading(true);
     setList([]);
     GetAllProject()
       .then((res) => {
         if (res.result) {
-          console.log("console:", res.data);
           setList(res.data);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
   }, []);
 
   return (
     <>
+      {isLoading && <Loader />}
       {list.length > 0 ? (
         <>
           <div className="flex justify-between items-center mx-14">
@@ -48,17 +52,17 @@ function AllProject() {
                 </tr>
               </thead>
               <tbody>
-                {list.map((data, index) => (
-                  <tr key={data.pro_id}>
+                {list.map((item, index) => (
+                  <tr key={item.pro_id}>
                     <th>{index + 1}</th>
-                    <td>{data.pro_name}</td>
-                    <td>{data.dev_url}</td>
-                    <td>{data.prod_url}</td>
-                    <td className="text-center">{data.teams.length}</td>
+                    <td>{item.pro_name}</td>
+                    <td>{item.dev_url}</td>
+                    <td>{item.prod_url}</td>
+                    <td className="text-center">{item.teams.length}</td>
                     <td className="text-center">
                       <button
                         onClick={() => {
-                          navigate(`/addProject/${data.pro_id}`);
+                          navigate(`/addProject/${item.pro_id}`);
                         }}
                         className="btn btn-ghost"
                       >
@@ -68,7 +72,8 @@ function AllProject() {
                     <td className="text-center">
                       <button
                         onClick={() => {
-                          setData(data);
+                          setData(item);
+                          document.getElementById("my_modal_3").showModal();
                         }}
                         className="btn btn-ghost"
                       >
@@ -82,10 +87,25 @@ function AllProject() {
           </div>
         </>
       ) : (
-        <>
-          <h1 className="text-3xl">No Project Found</h1>
-        </>
+        <div className="flex justify-center items-center w-full h-full min-h-screen">
+          <h1 className="text-3xl text-red-400">No Project Found</h1>
+        </div>
       )}
+
+      {/* You can open the modal using document.getElementById('ID').showModal() method */}
+
+      <dialog id="my_modal_3" className="modal">
+        <div className="modal-box">
+          <form method="dialog">
+            {/* if there is a button in form, it will close the modal */}
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
+          <h3 className="font-bold text-lg">{data.pro_name}</h3>
+          <p className="py-4">Press ESC key or click on ✕ button to close</p>
+        </div>
+      </dialog>
     </>
   );
 }

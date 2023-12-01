@@ -1,8 +1,9 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Field, Formik } from "formik";
 import * as Yup from "yup";
+import { UserRegister } from "../services/services";
+import { toast } from "react-toastify";
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -19,8 +20,6 @@ const schema = Yup.object().shape({
 function Register() {
   const navigate = useNavigate();
 
-  useEffect(() => {}, []);
-
   return (
     <>
       <Formik
@@ -30,15 +29,16 @@ function Register() {
           email: "",
           password: "",
           role: 1,
-          type: null,
+          type: 0,
         }}
         onSubmit={(values) => {
           // Alert the input values of the form that we filled
-          axios
-            .post("http://localhost:3000/auth/register", values)
+          UserRegister(values)
             .then((res) => {
-              if (res.data.result) {
+              if (res.result) {
                 navigate("/allproject");
+              } else {
+                toast.error(res.reason);
               }
             })
             .catch((err) => console.log(err));
@@ -115,8 +115,9 @@ function Register() {
                     as="select"
                     name="type"
                     className="select select-bordered w-full max-w-xl sm:select-sm md:select-md "
+                    value={values.type}
                   >
-                    <option disabled selected>
+                    <option disabled value={0}>
                       select user tpye?
                     </option>
                     <option value={1}>backend</option>

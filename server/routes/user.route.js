@@ -9,7 +9,7 @@ const verifyUser = require("../middleware/auth");
 
 const route = express.Router();
 
-route.post("/register", (req, res) => {
+route.post("/register", verifyUser, (req, res) => {
   register(req.body)
     .then((data) => res.status(data.status).json(data.data))
     .catch((err) => {
