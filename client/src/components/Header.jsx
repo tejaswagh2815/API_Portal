@@ -43,9 +43,6 @@ function Header() {
             <Link to="/allproject" className="btn btn-ghost text-xl">
               Project List
             </Link>
-            <Link to="/addproject/0" className="btn btn-ghost text-xl">
-              Add Project
-            </Link>
             <Link to="/register" className="btn btn-ghost text-xl">
               Add User
             </Link>

@@ -35,7 +35,6 @@ async function getAll(queryParams) {
     const { pageNo, pageSize, offset, search } = getQueryParams(queryParams);
 
     const count = await ProjectModel.count();
-    console.log(search);
 
     const data = await ProjectModel.findAll({
       where: {
