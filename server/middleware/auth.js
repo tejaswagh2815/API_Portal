@@ -7,7 +7,7 @@ async function verifyUser(req, res, next) {
     const jwtsec = process.env.JWT_SECRET;
     if (!token) {
       return res
-        .status(403)
+        .status(200)
         .json({ result: false, reason: "No Token Provided" });
     } else {
       jwt.verify(token, jwtsec, async (err, decode) => {

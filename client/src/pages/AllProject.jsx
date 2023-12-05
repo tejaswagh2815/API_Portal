@@ -3,25 +3,38 @@ import { useNavigate } from "react-router-dom";
 import { GetAllProject } from "../services/services";
 import { FaRegEdit, FaUserEdit } from "react-icons/fa";
 import Loader from "../components/Loader";
+import Pagination from "../components/Pagination";
 
 function AllProject() {
   const [list, setList] = useState([]);
   const [data, setData] = useState("");
+  const [pagi, setPagi] = useState({
+    currentPage: 1,
+    totalPages: 0,
+    totalItems: 0,
+    remainingPages: 0,
+  });
+
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoading(true);
     setList([]);
-    GetAllProject()
+    GetAllProject({ page: pagi.currentPage })
       .then((res) => {
         if (res.result) {
           setList(res.data);
+          setPagi(res.pagination);
         }
       })
       .catch((err) => console.log(err))
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [pagi.currentPage]);
+
+  const handlePageClick = (e) => {
+    setPagi((prev) => ({ ...prev, currentPage: e.selected + 1 }));
+  };
 
   return (
     <>
@@ -54,7 +67,7 @@ function AllProject() {
               <tbody>
                 {list.map((item, index) => (
                   <tr key={item.pro_id}>
-                    <th>{index + 1}</th>
+                    <th>{pagi.currentPage * 10 - 10 + index + 1}</th>
                     <td>{item.pro_name}</td>
                     <td>{item.dev_url}</td>
                     <td>{item.prod_url}</td>
@@ -85,27 +98,15 @@ function AllProject() {
               </tbody>
             </table>
           </div>
+          <Pagination
+            numOfPages={pagi.totalPages}
+            pageNo={pagi.currentPage}
+            pageSize={pagi.totalPages}
+            handlePageClick={handlePageClick}
+            totalItems={pagi.totalItems}
+          />
         </>
-      ) : (
-        <div className="flex justify-center items-center w-full h-full min-h-screen">
-          <h1 className="text-3xl text-red-400">No Project Found</h1>
-        </div>
-      )}
-
-      {/* You can open the modal using document.getElementById('ID').showModal() method */}
-
-      <dialog id="my_modal_3" className="modal">
-        <div className="modal-box">
-          <form method="dialog">
-            {/* if there is a button in form, it will close the modal */}
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-              ✕
-            </button>
-          </form>
-          <h3 className="font-bold text-lg">{data.pro_name}</h3>
-          <p className="py-4">Press ESC key or click on ✕ button to close</p>
-        </div>
-      </dialog>
+      ) : null}
     </>
   );
 }

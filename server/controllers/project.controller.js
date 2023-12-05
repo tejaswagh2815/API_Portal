@@ -1,7 +1,9 @@
+const { Op } = require("sequelize");
 const sequelize = require("../config/db.config");
 const ProjectModel = require("../models/Project.model");
 const TeamModel = require("../models/Team.model");
 const getResponse = require("../utils/respones");
+const getQueryParams = require("../utils/getQueryParams");
 
 async function createProject(data) {
   try {
@@ -28,20 +30,36 @@ async function createProject(data) {
   }
 }
 
-async function getAll() {
+async function getAll(queryParams) {
   try {
-    const allProject = await ProjectModel.findAll({
+    const { pageNo, pageSize, offset, search } = getQueryParams(queryParams);
+
+    const count = await ProjectModel.count();
+    console.log(search);
+
+    const data = await ProjectModel.findAll({
+      where: {
+        pro_name: {
+          [Op.like]: `%${search}%`,
+        },
+      },
       include: [
         {
           model: TeamModel,
         },
       ],
+      offset,
+      limit: pageSize,
     });
 
-    if (allProject.length > 0) {
-      return getResponse(200, true, "all project", allProject);
-    } else {
+    if (!data) {
       return getResponse(404, false, "no project found");
+    } else {
+      return getResponse(200, true, "all project", data, {
+        pageNo,
+        pageSize,
+        count: count,
+      });
     }
   } catch (error) {
     throw error;

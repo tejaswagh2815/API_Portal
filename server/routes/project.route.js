@@ -22,7 +22,7 @@ route.post("/createProject", verifyUser, (req, res) => {
 });
 
 route.get("/allProject", verifyUser, (req, res) => {
-  getAll()
+  getAll(req.query)
     .then((data) => {
       res.status(data.status).json(data.data);
     })

@@ -55,11 +55,12 @@ export const HandleLogout = async () => {
     return error;
   }
 };
-export const GetAllProject = async () => {
+
+export const GetAllProject = async ({ page }) => {
   try {
     const result = await axios({
       method: "GET",
-      url: `${baseUrl}/api/allProject`,
+      url: `${baseUrl}/api/allProject?pageNo=${page}`,
       withCredentials: true,
     });
     return result.data;
