@@ -8,7 +8,7 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import Layout from "./Layout.jsx";
-import { AllProject, Home, Login, Register } from "./pages";
+import { AllProject, Home, Login, Register, Users } from "./pages";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,6 +22,7 @@ const router = createBrowserRouter(
       <Route path="" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/users" element={<Users />} />
       <Route path="/allproject" element={<AllProject />} />
       <Route path="/projectdetail/:id" element={<ProjectDetail />} />
     </Route>

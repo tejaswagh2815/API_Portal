@@ -118,9 +118,23 @@ async function deleteUser(data) {
   }
 }
 
+async function getAll() {
+  try {
+    let record = await UserModel.findAll();
+    if (record) {
+      return getResponse(200, true, "Users found", record);
+    } else {
+      return getResponse(404, false, "no user found");
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   register,
   login,
   getUserData,
   deleteUser,
+  getAll,
 };

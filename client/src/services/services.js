@@ -109,3 +109,43 @@ export const EditProject = async (values) => {
     return error;
   }
 };
+
+export const getUserList = async () => {
+  try {
+    const result = await axios({
+      method: "GET",
+      url: `${baseUrl}/auth/userlist`,
+      withCredentials: true,
+    });
+    return result.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const AddAsTeam = async (obj) => {
+  try {
+    const result = await axios({
+      method: "POST",
+      url: `${baseUrl}/api/team`,
+      data: obj,
+      withCredentials: true,
+    });
+    return result.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const removeMember = async (id) => {
+  try {
+    const result = await axios({
+      method: "DELETE",
+      url: `${baseUrl}/api/team/${id}`,
+      withCredentials: true,
+    });
+    return result.data;
+  } catch (error) {
+    return error;
+  }
+};
