@@ -120,7 +120,11 @@ async function deleteUser(data) {
 
 async function getAll() {
   try {
-    let record = await UserModel.findAll();
+    let record = await UserModel.findAll({
+      where: {
+        user_roles: 1,
+      },
+    });
     if (record) {
       return getResponse(200, true, "Users found", record);
     } else {

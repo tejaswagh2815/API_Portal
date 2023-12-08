@@ -20,7 +20,7 @@ async function addNew(data) {
       });
 
       if (!created) {
-        return getResponse(400, true, "team member already exits");
+        return getResponse(200, true, "team member already exits");
       } else {
         return getResponse(201, true, "team member added", team);
       }
