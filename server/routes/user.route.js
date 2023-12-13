@@ -5,6 +5,8 @@ const {
   getUserData,
   deleteUser,
   getAll,
+  GetUserByID,
+  editUser,
 } = require("../controllers/user.controller");
 const verifyUser = require("../middleware/auth");
 
@@ -14,7 +16,6 @@ route.post("/register", verifyUser, (req, res) => {
   register(req.body)
     .then((data) => res.status(data.status).json(data.data))
     .catch((err) => {
-      console.error("auth : register : ", err);
       res.status(400).json(err);
     });
 });
@@ -32,7 +33,6 @@ route.post("/login", (req, res) => {
       }
     })
     .catch((err) => {
-      console.error("auth : Login : ", err);
       res.status(400).json(err);
     });
 });
@@ -41,7 +41,6 @@ route.get("/verifyuser", verifyUser, (req, res) => {
   getUserData(req.body)
     .then((data) => res.status(data.status).json(data.data))
     .catch((err) => {
-      console.error("auth : verify : ", err);
       res.status(400).json(err);
     });
 });
@@ -59,12 +58,28 @@ route.get("/userlist", verifyUser, (req, res) => {
     });
 });
 
-// route.delete("/user/:id", verifyUser, (req, res) => {
-//   deleteUser(req.params)
-//     .then((data) => {
-//       res.status(data.status).json(data.data);
-//     })
-//     .catch((err) => res.status(404).json(err.errors));
-// });
+route.get("/user/:id", verifyUser, (req, res) => {
+  GetUserByID(req.params)
+    .then((data) => res.status(data.status).json(data.data))
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+});
+
+route.put("/edituser", verifyUser, (req, res) => {
+  editUser(req.body)
+    .then((data) => {
+      res.status(data.status).json(data.data);
+    })
+    .catch((err) => res.status(400).json(err.errors));
+});
+
+route.delete("/user/:id", verifyUser, (req, res) => {
+  deleteUser(req.params)
+    .then((data) => {
+      res.status(data.status).json(data.data);
+    })
+    .catch((err) => res.status(404).json(err.errors));
+});
 
 module.exports = route;

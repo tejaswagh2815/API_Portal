@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Field, Formik } from "formik";
 import * as Yup from "yup";
-import { UserRegister } from "../services/services";
 import { toast } from "react-toastify";
 
 const schema = Yup.object().shape({
@@ -33,15 +32,15 @@ function Register() {
         }}
         onSubmit={(values) => {
           // Alert the input values of the form that we filled
-          UserRegister(values)
-            .then((res) => {
-              if (res.result) {
-                navigate("/allproject");
-              } else {
-                toast.error(res.reason);
-              }
-            })
-            .catch((err) => console.log(err));
+          // UserRegister(values)
+          //   .then((res) => {
+          //     if (res.result) {
+          //       navigate("/allproject");
+          //     } else {
+          //       toast.error(res.reason);
+          //     }
+          //   })
+          //   .catch((err) => console.log(err));
         }}
       >
         {({

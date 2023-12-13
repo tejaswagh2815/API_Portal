@@ -14,6 +14,7 @@ import store from "./redux/store";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import "@radix-ui/themes/styles.css";
+import "react-responsive-modal/styles.css";
 import ProjectDetail from "./pages/ProjectDetail.jsx";
 
 const router = createBrowserRouter(

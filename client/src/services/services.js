@@ -15,20 +15,6 @@ export const VerifyUser = async () => {
   }
 };
 
-export const UserRegister = async (values) => {
-  try {
-    const result = await axios({
-      method: "POST",
-      url: `${baseUrl}/auth/register`,
-      data: values,
-      withCredentials: true,
-    });
-    return result.data;
-  } catch (error) {
-    return error;
-  }
-};
-
 export const UserLogin = async (values) => {
   try {
     const result = await axios({
@@ -102,19 +88,6 @@ export const EditProject = async (values) => {
       method: "PUT",
       url: `${baseUrl}/api/editproject`,
       data: values,
-      withCredentials: true,
-    });
-    return result.data;
-  } catch (error) {
-    return error;
-  }
-};
-
-export const getUserList = async () => {
-  try {
-    const result = await axios({
-      method: "GET",
-      url: `${baseUrl}/auth/userlist`,
       withCredentials: true,
     });
     return result.data;

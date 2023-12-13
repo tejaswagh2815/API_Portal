@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  AddAsTeam,
-  GetProjectById,
-  getUserList,
-  removeMember,
-} from "../services/services";
+import { AddAsTeam, GetProjectById, removeMember } from "../services/services";
 import moment from "moment";
 import { MdPersonAddAlt, MdPersonRemoveAlt1 } from "react-icons/md";
 
