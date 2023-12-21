@@ -3,6 +3,7 @@ const {
   createApi,
   apiList,
   deleteApi,
+  apiListById,
 } = require("../controllers/api.controller");
 
 const route = express.Router();
@@ -20,6 +21,17 @@ route.post("/createapi", (req, res) => {
 
 route.get("/apilist", (req, res) => {
   apiList()
+    .then((data) => {
+      res.status(data.status).json(data.data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json(err);
+    });
+});
+
+route.get("/apibyid/:id", (req, res) => {
+  apiListById(req.params)
     .then((data) => {
       res.status(data.status).json(data.data);
     })

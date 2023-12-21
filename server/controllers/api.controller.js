@@ -65,6 +65,30 @@ async function apiList() {
   }
 }
 
+async function apiListById(data) {
+  try {
+    let { id } = data;
+    console.log(id);
+    const allApi = await ApiModel.findAll({
+      where: {
+        pro_id: id,
+      },
+      include: [
+        {
+          model: ApiParamModel,
+        },
+      ],
+    });
+    if (allApi.length > 0) {
+      return getResponse(200, true, "api list", allApi);
+    } else {
+      return getResponse(200, false, "apis list not found");
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function deleteApi(data) {
   try {
     let { id } = data;
@@ -93,4 +117,4 @@ async function deleteApi(data) {
   }
 }
 
-module.exports = { createApi, apiList, deleteApi };
+module.exports = { createApi, apiList, deleteApi, apiListById };

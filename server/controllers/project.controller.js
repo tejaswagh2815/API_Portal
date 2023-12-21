@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const sequelize = require("../config/db.config");
 const ProjectModel = require("../models/Project.model");
 const TeamModel = require("../models/Team.model");
@@ -91,12 +91,17 @@ async function getProjecById(data) {
 async function deleteById(data) {
   try {
     let { id } = data;
-    let record = await ProjectModel.destroy({
+    let rec = await TeamModel.destroy({
       where: {
         pro_id: id,
       },
     });
 
+    let record = await ProjectModel.destroy({
+      where: {
+        pro_id: id,
+      },
+    });
     if (record) {
       return getResponse(200, true, "Project was deleted");
     } else {

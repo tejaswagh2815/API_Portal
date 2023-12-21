@@ -7,9 +7,7 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user_type === 0) {
-      navigate("/allproject");
-    }
+    navigate("/allproject");
   }, []);
   return <></>;
 }

@@ -4,7 +4,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { verifyUser } from "../redux/authSlice";
-import { UserLogin } from "../services/services";
+import { userurl } from "../utils/ApiList";
+import { ApiComonFun } from "../utils/ApiComonFun";
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -25,7 +26,7 @@ function Login() {
         validationSchema={schema}
         initialValues={{ email: "", password: "" }}
         onSubmit={(values) => {
-          UserLogin(values)
+          ApiComonFun(`${userurl}/login`, "POST", true, values)
             .then((res) => {
               if (res.result) {
                 dispatch(verifyUser(res.data));

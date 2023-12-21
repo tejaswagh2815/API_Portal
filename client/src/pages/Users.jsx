@@ -33,7 +33,6 @@ const Users = () => {
 
   useEffect(() => {
     setIsLoading(true);
-
     ApiComonFun(`${userurl}/userlist`, "GET", true)
       .then((res) => {
         if (res.result) {

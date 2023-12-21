@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CreateProject, GetAllProject } from "../services/services";
 import Loader from "../components/Loader";
 import Pagination from "../components/Pagination";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { ApiComonFun } from "../utils/ApiComonFun";
+import { comurl, userurl } from "../utils/ApiList";
+import { useSelector } from "react-redux";
 
 const schema = Yup.object().shape({
   pro_name: Yup.string()
@@ -23,20 +25,41 @@ function AllProject() {
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { user_type, user_id } = useSelector((state) => state.userData);
 
   useEffect(() => {
     setIsLoading(true);
     setList([]);
-    GetAllProject({ page: pagi.currentPage, search })
-      .then((res) => {
-        if (res.result) {
-          setList(res.data);
-          setPagi(res.pagination);
-        }
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setIsLoading(false));
-  }, [pagi.currentPage, search]);
+    if (user_type) {
+      ApiComonFun(
+        `${userurl}/getUserProjects/${user_id}?pageNo=${pagi.currentPage}&search=${search}`,
+        "GET",
+        true
+      )
+        .then((res) => {
+          if (res.result) {
+            setList(res.data);
+            setPagi(res.pagination);
+          }
+        })
+        .catch((err) => console.log(err))
+        .finally(() => setIsLoading(false));
+    } else {
+      ApiComonFun(
+        `${comurl}/allProject?pageNo=${pagi.currentPage}&search=${search}`,
+        "GET",
+        true
+      )
+        .then((res) => {
+          if (res.result) {
+            setList(res.data);
+            setPagi(res.pagination);
+          }
+        })
+        .catch((err) => console.log(err))
+        .finally(() => setIsLoading(false));
+    }
+  }, [user_type, search]);
 
   const handlePageClick = (e) => {
     setPagi((prev) => ({ ...prev, currentPage: e.selected + 1 }));
@@ -44,7 +67,7 @@ function AllProject() {
 
   const handleSubmit = async (values) => {
     setIsLoading(true);
-    CreateProject(values)
+    ApiComonFun(`${projecturl}/createProject`, "POST", true, values)
       .then((res) => {
         if (res.result) {
           const { pro_id } = res.data;
@@ -57,26 +80,88 @@ function AllProject() {
 
   return (
     <>
-      <div className="flex justify-between items-center mx-14">
-        <h1 className="font-bold text-3xl sm:text-xl md:text-2xl px-5 my-10">
-          All Project
-        </h1>
-        <input
-          type="text"
-          placeholder="search project"
-          className="input input-bordered w-full max-w-xl input-md sm:input-sm md:input-md lg:input-xl"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <button
-          onClick={() => document.getElementById("my_modal_3").showModal()}
-          className="btn btn-outline btn-accent btn-xs sm:btn-sm md:btn-md lg:btn-md mx-2 hover:text-white"
-        >
-          add project
-        </button>
-      </div>
+      {user_type ? (
+        <div className="flex justify-between items-center mx-14">
+          <h1 className="font-bold text-3xl sm:text-xl md:text-2xl px-5 my-10">
+            All Project
+          </h1>
+          <input
+            type="text"
+            placeholder="search project"
+            className="input input-bordered w-full max-w-xl input-md sm:input-sm md:input-md lg:input-xl"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+      ) : (
+        <div className="flex justify-between items-center mx-14">
+          <h1 className="font-bold text-3xl sm:text-xl md:text-2xl px-5 my-10">
+            All Project
+          </h1>
+          <input
+            type="text"
+            placeholder="search project"
+            className="input input-bordered w-full max-w-xl input-md sm:input-sm md:input-md lg:input-xl"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <button
+            onClick={() => document.getElementById("my_modal_3").showModal()}
+            className="btn btn-outline  btn-xs sm:btn-sm md:btn-md lg:btn-md mx-2 hover:text-white"
+          >
+            add project
+          </button>
+        </div>
+      )}
+
       {isLoading && <Loader />}
-      {list.length > 0 ? (
+      {user_type ? (
+        list.length > 0 ? (
+          <>
+            <div className="overflow-x-auto mx-10">
+              <table className="table">
+                <thead>
+                  <tr className="bg-blue-100">
+                    <th>Sr</th>
+                    <th>Name</th>
+                    <th>Devlopment Url</th>
+                    <th>Production Url</th>
+                    <th className="text-center">Total Api</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {list.map((item, index) => (
+                    <tr
+                      onClick={() =>
+                        navigate(`/apidetail/${item.pro_id}/${item.pro_name}`)
+                      }
+                      className="cursor-pointer"
+                      key={item.pro_id}
+                    >
+                      <th>{pagi.currentPage * 10 - 10 + index + 1}</th>
+                      <td>{item.pro_name}</td>
+                      <td>{item.dev_url}</td>
+                      <td>{item.prod_url}</td>
+                      <td className="text-center">{item.apitables?.length}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination
+              numOfPages={pagi.totalPages}
+              pageNo={pagi.currentPage}
+              pageSize={pagi.totalPages}
+              handlePageClick={handlePageClick}
+              totalItems={pagi.totalItems}
+            />
+          </>
+        ) : (
+          <div className="flex justify-center items-center w-full h-full">
+            <h1 className="text-2xl text-red-400">No Project Found</h1>
+          </div>
+        )
+      ) : list.length > 0 ? (
         <>
           <div className="overflow-x-auto mx-10">
             <table className="table">
@@ -100,7 +185,7 @@ function AllProject() {
                     <td>{item.pro_name}</td>
                     <td>{item.dev_url}</td>
                     <td>{item.prod_url}</td>
-                    <td className="text-center">{item.teams.length}</td>
+                    <td className="text-center">{item.teams?.length}</td>
                   </tr>
                 ))}
               </tbody>
@@ -119,6 +204,7 @@ function AllProject() {
           <h1 className="text-2xl text-red-400">No Project Found</h1>
         </div>
       )}
+
       <>
         <dialog id="my_modal_3" className="modal">
           <div className="modal-box">

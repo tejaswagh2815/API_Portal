@@ -26,7 +26,7 @@ const TeamModel = sequelize.define(
   }
 );
 
-TeamModel.belongsTo(ProjectModel, { foreignKey: "pro_id" });
+TeamModel.belongsTo(ProjectModel, { foreignKey: "pro_id", as: "project" });
 
 ProjectModel.hasMany(TeamModel, { foreignKey: "pro_id" });
 

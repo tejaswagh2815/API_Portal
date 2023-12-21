@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaPowerOff } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { HandleLogout, VerifyUser } from "../services/services";
 import { logout, verifyUser } from "../redux/authSlice";
+import { ApiComonFun } from "../utils/ApiComonFun";
+import { userurl } from "../utils/ApiList";
 
 function Header() {
   const { user_type } = useSelector((state) => state.userData);
@@ -11,7 +12,7 @@ function Header() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    VerifyUser()
+    ApiComonFun(`${userurl}/verifyuser`, "GET", true)
       .then((res) => {
         if (res.result) {
           dispatch(verifyUser(res.data));
@@ -24,8 +25,9 @@ function Header() {
   }, []);
 
   const hadleLogout = () => {
-    HandleLogout()
+    ApiComonFun(`${userurl}/logout`, "GET", true)
       .then((res) => {
+        console.log("res:", res);
         if (res.result) {
           dispatch(logout());
           navigate("/login");
@@ -35,6 +37,7 @@ function Header() {
       })
       .catch((err) => console.log(err));
   };
+
   return (
     <>
       {user_type === 0 ? (
@@ -54,9 +57,11 @@ function Header() {
           </div>
         </div>
       ) : (
-        <div className="navbar bg-primary text-secondary-content mx-auto sm:btm-nav-sm md:btm-nav-md">
+        <div className="navbar bg-[#08509D] text-secondary-content mx-auto sm:btm-nav-sm md:btm-nav-md">
           <div className="flex-1">
-            <a className="btn btn-ghost text-xl">user</a>
+            <Link to="/allproject" className="btn btn-ghost text-xl">
+              Project List
+            </Link>
           </div>
           <div className="flex-none">
             <button onClick={hadleLogout} className="btn btn-ghost btn-circle">

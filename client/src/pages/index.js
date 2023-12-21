@@ -1,7 +1,8 @@
 import Home from "./Home";
 import Login from "./Login";
-import Register from "./Register";
 import AllProject from "./AllProject";
 import Users from "./Users";
+import ApiDetail from "./ApiDetail";
+import ProjectDetail from "./ProjectDetail";
 
-export { Home, Login, Register, AllProject, Users };
+export { Home, Login, AllProject, Users, ApiDetail, ProjectDetail };

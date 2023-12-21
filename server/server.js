@@ -9,7 +9,6 @@ const authApi = require("./routes/user.route");
 const projectApi = require("./routes/project.route");
 const teamApi = require("./routes/team.route");
 const Api = require("./routes/api.route");
-const bodyParser = require("body-parser");
 const port = process.env.PORT;
 
 //middleware

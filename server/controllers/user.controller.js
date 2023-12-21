@@ -1,8 +1,13 @@
 const sequelize = require("../config/db.config");
+const ProjectModel = require("../models/Project.model");
+const TeamModel = require("../models/Team.model");
 const UserModel = require("../models/User.model");
 const getResponse = require("../utils/respones");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const getQueryParams = require("../utils/getQueryParams");
+const { Op } = require("sequelize");
+const ApiModel = require("../models/Api.model");
 
 async function register(data) {
   try {
@@ -104,6 +109,7 @@ async function editUser(data) {
     throw error;
   }
 }
+
 async function getUserData(data) {
   try {
     const userData = await UserModel.findOne({
@@ -128,13 +134,12 @@ async function getUserData(data) {
 async function deleteUser(data) {
   try {
     let { id } = data;
-
     let record = await UserModel.destroy({
       where: {
         user_id: id,
       },
     });
-    console.log("delete rec : ", record);
+
     if (record) {
       return getResponse(200, true, "User reomved");
     } else {
@@ -144,10 +149,10 @@ async function deleteUser(data) {
     throw error;
   }
 }
+
 async function GetUserByID(data) {
   try {
     let { id } = data;
-
     let record = await UserModel.findOne({
       where: {
         user_id: id,
@@ -166,6 +171,53 @@ async function GetUserByID(data) {
     throw error;
   }
 }
+
+async function getUserProjects(userId, queryParams) {
+  try {
+    const { pageNo, pageSize, offset, search } = getQueryParams(queryParams);
+    const count = await ProjectModel.count({
+      include: [
+        {
+          model: TeamModel,
+          where: { user_id: userId },
+          attributes: [],
+        },
+      ],
+    });
+    const userProjectsData = await ProjectModel.findAll({
+      where: {
+        pro_name: {
+          [Op.like]: `%${search}%`,
+        },
+      },
+      include: [
+        {
+          model: TeamModel,
+          where: { user_id: userId },
+          attributes: [],
+        },
+        {
+          model: ApiModel,
+        },
+      ],
+      limit: pageSize,
+      offset,
+    });
+
+    if (userProjectsData) {
+      return getResponse(200, true, "Project by user", userProjectsData, {
+        pageNo,
+        pageSize,
+        count: count,
+      });
+    } else {
+      return getResponse(200, false, "no data found");
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getAll() {
   try {
     let record = await UserModel.findAll({
@@ -194,4 +246,5 @@ module.exports = {
   getAll,
   GetUserByID,
   editUser,
+  getUserProjects,
 };

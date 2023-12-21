@@ -7,6 +7,7 @@ const {
   getAll,
   GetUserByID,
   editUser,
+  getUserProjects,
 } = require("../controllers/user.controller");
 const verifyUser = require("../middleware/auth");
 
@@ -63,6 +64,14 @@ route.get("/user/:id", verifyUser, (req, res) => {
     .then((data) => res.status(data.status).json(data.data))
     .catch((err) => {
       res.status(400).json(err);
+    });
+});
+
+route.get("/getUserProjects/:id", verifyUser, (req, res) => {
+  getUserProjects(req.params.id, req.query)
+    .then((data) => res.status(data.status).json(data.data))
+    .catch((err) => {
+      res.status(400).json(err.message);
     });
 });
 
