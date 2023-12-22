@@ -3,8 +3,7 @@ import { useParams } from "react-router-dom";
 import { ApiComonFun } from "../utils/ApiComonFun";
 import { comurl } from "../utils/ApiList";
 import * as Accordion from "@radix-ui/react-accordion";
-import { ChevronDownIcon, TrashIcon } from "@radix-ui/react-icons";
-import { Button, IconButton } from "@radix-ui/themes";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
 
 const ApiDetail = () => {
   const { id, name } = useParams();
@@ -23,16 +22,16 @@ const ApiDetail = () => {
   }, []);
 
   const AccordionItem = React.forwardRef(
-    ({ children, className, color, borderColor, ...props }, forwardedRef) => {
+    ({ children, className, color, border, ...props }, forwardedRef) => {
       return (
         <Accordion.Item
           className={
-            "focus-within:shadow-mauve12 mt-3 overflow-hidden first:mt-0 first:rounded-t last:rounded-b focus-within:relative focus-within:z-10 focus-within:shadow-[0_0_0_2px] border-0 border-green-500"
+            "focus-within:shadow-mauve12 mt-3 overflow-hidden first:mt-0 first:rounded-t last:rounded-b focus-within:relative focus-within:z-10 focus-within:shadow-[0_0_0_2px] "
           }
           style={{
             backgroundColor: color,
-            // border: 1,
-            // borderColor: borderColor,
+            border: 1,
+            borderColor: border,
           }}
           {...props}
           ref={forwardedRef}
@@ -44,14 +43,11 @@ const ApiDetail = () => {
   );
 
   const AccordionTrigger = React.forwardRef(
-    ({ children, className, borderColor, ...props }, forwardedRef) => (
+    ({ children, className, ...props }, forwardedRef) => (
       <Accordion.Header className="flex">
         <Accordion.Trigger
-          style={{
-            borderColor: borderColor,
-          }}
           className={
-            "text-violet11 shadow-mauve6 hover:bg-mauve2 group flex h-[45px] flex-1 cursor-default items-center justify-between px-5 text-[15px] leading-none shadow-[0_1px_0] outline-none "
+            "text-violet11 shadow-mauve6 hover:bg-mauve2 group flex h-[45px] flex-1 cursor-default items-center justify-between px-5 text-[15px] leading-none shadow-[0_1px_0] outline-none"
           }
           {...props}
           ref={forwardedRef}
@@ -80,16 +76,61 @@ const ApiDetail = () => {
     )
   );
 
+  // ${
+  //   x.reqtype == 1
+  //     ? "border-[#61AFFE] bg-[#EBF3FB]"
+  //     : x.reqtype == 2
+  //     ? "border-[#49CC90] bg-[#E8F6F0]"
+  //     : x.reqtype == 3
+  //     ? "border-[#FCA130] bg-[#FBF1E6]"
+  //     : "border-[#F93E3E] bg-[#FAE7E7]"
+  // }
+
   return (
     <>
       <div className="text-3xl text-center py-5">{name}</div>
       <Accordion.Root
-        className={` w-full px-6 rounded-md`}
+        className={` w-full px-6 rounded-md shadow-[0_2px_10px] shadow-black/5`}
         type="single"
         collapsible
       >
         {apiData.map((x) => (
           <>
+            {/* <div
+              ket={x.api_id}
+              className={`collapse collapse-arrow my-3 border-2  `}
+            >
+              <input type="radio" name="my-accordion-3" checked="checked" />
+              <div className="flex flex-row">
+                <div
+                  className={`btn ${
+                    x.reqtype == 1
+                      ? "btn-info "
+                      : x.reqtype == 2
+                      ? "btn-success "
+                      : x.reqtype == 3
+                      ? " btn-warning "
+                      : "btn-error "
+                  } text-white w-16`}
+                >
+                  {x.reqtype == 1
+                    ? "GET"
+                    : x.reqtype == 2
+                    ? "POST"
+                    : x.reqtype == 3
+                    ? "PUT"
+                    : "DELETE"}
+                </div>
+                <div className="collapse-title text-xl font-medium text-bold">
+                  {x.endpoint}
+                </div>
+              </div>
+
+              <div className="collapse-content">
+                <p>{x.title}</p>
+              </div>
+            </div> */}
+
             <AccordionItem
               value={x.api_id}
               color={`${
@@ -101,7 +142,7 @@ const ApiDetail = () => {
                   ? "#FBF1E6"
                   : "#FAE7E7"
               }`}
-              borderColor={`${
+              border={`${
                 x.reqtype == 1
                   ? "#61AFFE"
                   : x.reqtype == 2
@@ -111,61 +152,13 @@ const ApiDetail = () => {
                   : "#F93E3E"
               }`}
             >
-              <AccordionTrigger
-                borderColor={`${
-                  x.reqtype == 1
-                    ? "#61AFFE"
-                    : x.reqtype == 2
-                    ? "#49CC90"
-                    : x.reqtype == 3
-                    ? "#FCA130"
-                    : "#F93E3E"
-                }`}
-              >
-                <div className="flex flex-row items-center w-full">
-                  <Button
-                    size="3"
-                    variant="solid"
-                    style={{
-                      height: "30px", // set the desired height
-                      width: "70px", // set the desired width
-                      borderRadius: "3px",
-                    }}
-                    color={
-                      x.reqtype == 1
-                        ? "blue"
-                        : x.reqtype == 2
-                        ? "green"
-                        : x.reqtype == 3
-                        ? "orange"
-                        : "red"
-                    }
-                  >
-                    {x.reqtype == 1
-                      ? "GET"
-                      : x.reqtype == 2
-                      ? "POST"
-                      : x.reqtype == 3
-                      ? "PUT"
-                      : "DELETE"}
-                  </Button>
-
-                  <div className=" font-bold px-3"> {x.endpoint}</div>
-                </div>
-                <div className="  right-[-24]">
-                  <IconButton onClick={() => console.log(x.api_id)}>
-                    <TrashIcon color="red" width="18" height="18" />
-                  </IconButton>
-                </div>
-              </AccordionTrigger>
+              <AccordionTrigger>{x.endpoint}</AccordionTrigger>
               <AccordionContent>
-                {x.params?.map((item) => (
-                  <div className="text-md">{item.name}</div>
-                ))}
+                {/* {x.params?.map((item) => item.id)} */}
               </AccordionContent>
             </AccordionItem>
           </>
-        ))}
+        ))}{" "}
       </Accordion.Root>
     </>
   );

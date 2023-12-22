@@ -64,6 +64,52 @@ const ApiDetail = () => {
           </div>
         ))}
       </div>
+
+      <div className="text-3xl text-center py-5">{name}</div>
+      {apiData.map((x) => (
+        <div
+          ket={x.api_id}
+          className={`collapse collapse-arrow my-3 border-2  ${
+            x.reqtype == 1
+              ? "border-[#61AFFE] bg-[#EBF3FB]"
+              : x.reqtype == 2
+              ? "border-[#49CC90] bg-[#E8F6F0]"
+              : x.reqtype == 3
+              ? "border-[#FCA130] bg-[#FBF1E6]"
+              : "border-[#F93E3E] bg-[#FAE7E7] "
+          }`}
+        >
+          <input type="radio" name="my-accordion-3" checked="checked" />
+          <div className="flex flex-row">
+            <div
+              className={`btn ${
+                x.reqtype == 1
+                  ? "btn-info "
+                  : x.reqtype == 2
+                  ? "btn-success "
+                  : x.reqtype == 3
+                  ? " btn-warning "
+                  : "btn-error "
+              } text-white w-16`}
+            >
+              {x.reqtype == 1
+                ? "GET"
+                : x.reqtype == 2
+                ? "POST"
+                : x.reqtype == 3
+                ? "PUT"
+                : "DELETE"}
+            </div>
+            <div className="collapse-title text-xl font-medium text-bold">
+              {x.endpoint}
+            </div>
+          </div>
+
+          <div className="collapse-content">
+            <p>{x.title}</p>
+          </div>
+        </div>
+      ))}
     </>
   );
 };
